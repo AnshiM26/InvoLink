@@ -1,9 +1,10 @@
 "use server";
-import requireUser from "./utils/hooks";
+import requireUser, { formatCurrency } from "./utils/hooks";
 import { parseWithZod } from "@conform-to/zod";
 import { invoiceSchema, onboardingSchema } from "./utils/zodSchemas";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import sgMail from "@sendgrid/mail"
 export async function onboardUser(prevState: any, formData: FormData) {
   const session = await requireUser();
   //server side form validation
@@ -58,6 +59,31 @@ export async function createInvoice(prevState:any,formData: FormData) {
       note: submission.value.note,
       userId:session.user?.id
     },
+  });
+
+sgMail.setApiKey(process.env.SENDGRID_INVOICE_EMAIL_API_KEY!)
+const msg = {
+  to: submission.value.clientEmail, 
+  from: 'InvoLink@anshikamisra.com',
+  templateId: 'd-41d52fcd9d9f423586ed3cb9dbb222f2', 
+  dynamicTemplateData: {
+    clientName: submission.value.clientName,
+    invoiceNumber: submission.value.invoiceNumber,
+    dueDate: new Intl.DateTimeFormat('en-IN',{
+      dateStyle:"long",
+    }).format(new Date(submission.value.date)),
+    totalAmt: formatCurrency(submission.value.total, submission.value.currency),
+    invoiceLink: 'https://yourpaymentlink.com',
+  },
+};
+
+sgMail
+  .send(msg)
+  .then(() => {
+    console.log('Email sent successfully');
+  })
+  .catch((error) => {
+    console.error('Error sending email:', error);
   });
   return redirect("/dashboard/invoices")
 }
