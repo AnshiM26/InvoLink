@@ -73,7 +73,7 @@ const msg = {
       dateStyle:"long",
     }).format(new Date(submission.value.date)),
     totalAmt: formatCurrency(submission.value.total, submission.value.currency),
-    invoiceLink: 'https://yourpaymentlink.com',
+    invoiceLink: `http://localhost:3000/api/invoice/${data.id}`,
   },
 };
 

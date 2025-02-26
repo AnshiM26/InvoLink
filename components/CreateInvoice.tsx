@@ -23,7 +23,19 @@ import { parseWithZod } from "@conform-to/zod";
 import { invoiceSchema } from "@/app/utils/zodSchemas";
 import { formatCurrency } from "@/app/utils/hooks";
 
-export function CreateInvoice() {
+interface CreateInvoiceProps {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+}
+
+export function CreateInvoice({
+  firstName,
+  lastName,
+  address,
+  email,
+}: CreateInvoiceProps) {
   const [lastResult, formAction] = useActionState(createInvoice, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -39,7 +51,7 @@ export function CreateInvoice() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [rate, setRate] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [currency,setCurrency]=useState("INR")
+  const [currency, setCurrency] = useState("INR");
 
   const totalCalc = (Number(quantity) || 0) * (Number(rate) || 0);
 
@@ -57,7 +69,7 @@ export function CreateInvoice() {
             name={fields.date.name}
             value={selectedDate.toISOString()}
           />
-        <Input type="hidden" name={fields.total.name} value={totalCalc} />
+          <Input type="hidden" name={fields.total.name} value={totalCalc} />
           <div className="flex flex-col gap-2 w-fit mb-6">
             <div className="flex items-center gap-4">
               <Badge variant="secondary">Draft</Badge>
@@ -98,7 +110,7 @@ export function CreateInvoice() {
                 defaultValue="INR"
                 name={fields.currency.name}
                 key={fields.currency.key}
-                onValueChange={(value)=>setCurrency(value)}
+                onValueChange={(value) => setCurrency(value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="select currency" />
@@ -126,12 +138,14 @@ export function CreateInvoice() {
                 <Input
                   name={fields.fromName.name}
                   key={fields.fromName.key}
+                  defaultValue={firstName+" "+lastName}
                   placeholder="Your Name"
                 />
                 <p className="text-sm text-red-600">{fields.fromName.errors}</p>
                 <Input
                   name={fields.fromEmail.name}
                   key={fields.fromEmail.key}
+                  defaultValue={email}
                   placeholder="Your Email"
                 />
                 <p className="text-sm text-red-600">
@@ -140,6 +154,7 @@ export function CreateInvoice() {
                 <Input
                   name={fields.fromAddress.name}
                   key={fields.fromAddress.key}
+                  defaultValue={address}
                   placeholder="Your Address"
                 />
                 <p className="text-sm text-red-600">
@@ -277,10 +292,7 @@ export function CreateInvoice() {
                 </p>
               </div>
               <div className="col-span-2">
-                <Input
-                  value={formatCurrency(totalCalc,currency)}
-                  disabled
-                />
+                <Input value={formatCurrency(totalCalc, currency)} disabled />
               </div>
             </div>
           </div>
@@ -288,12 +300,12 @@ export function CreateInvoice() {
             <div className="w-1/3">
               <div className="flex justify-between py-2">
                 <span>Subtotal</span>
-                <span>{formatCurrency(totalCalc,currency)}</span>
+                <span>{formatCurrency(totalCalc, currency)}</span>
               </div>
               <div className="flex justify-between py-2 border-t">
                 <span>Total {currency}</span>
                 <span className="font-medium underline underline-offset-2">
-                  {formatCurrency(totalCalc,currency)}
+                  {formatCurrency(totalCalc, currency)}
                 </span>
               </div>
             </div>
