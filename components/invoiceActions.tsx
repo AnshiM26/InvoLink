@@ -24,7 +24,7 @@ export function InvoiceActions({id}:invoiceActionsProps) {
             <Link href={`/dashboard/invoices/${id}`}><PencilIcon className="size-4 mr-2"/>Edit Invoice</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-            <Link href=""><DownloadCloudIcon className="size-4 mr-2"/>Download Invoice</Link>
+            <Link href={`/api/invoice/${id}`} target="_blank"><DownloadCloudIcon className="size-4 mr-2"/>Download Invoice</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
             <Link href=""><Mail className="size-4 mr-2"/>Reminder Email</Link>
