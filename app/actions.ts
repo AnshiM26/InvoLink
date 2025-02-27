@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import sgMail from "@sendgrid/mail";
 import getDueDate from "@/components/DueDate";
+import { InvoiceStatus, Prisma } from "@prisma/client";
 
 export async function onboardUser(prevState: any, formData: FormData) {
   const session = await requireUser();
@@ -188,4 +189,17 @@ export default async function DeleteInvoice(invoiceid: string) {
     console.error("DeleteInvoice Error:", error);
     return { error: "Something went wrong" };
   }
+}
+
+export async function updateStatus(invoiceid: string, status: string) {
+  const session=await requireUser();
+  const data=await prisma.invoice.update({
+    where:{
+      userId:session.user?.id,
+      id:invoiceid
+    },
+    data:{
+      status:status as InvoiceStatus
+    }
+  })
 }

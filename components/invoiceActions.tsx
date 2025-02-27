@@ -25,15 +25,27 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { startTransition, useState } from "react";
-import DeleteInvoice from "@/app/actions";
+import DeleteInvoice, { updateStatus } from "@/app/actions";
 import { redirect } from "next/navigation";
-import { Toaster } from "./ui/sonner";
 
 interface invoiceActionsProps {
   id: string;
+  state:string
 }
-export function InvoiceActions({ id }: invoiceActionsProps) {
+export function InvoiceActions({ id,state }: invoiceActionsProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const initialState=(state==="PAID"?"PENDING":"PAID")
+  const [paidState,setPaidState]=useState(initialState);
+  async function handleStateChange () {
+    setPaidState((prevState) => (prevState === "PAID" ? "PENDING" : "PAID"));
+    try {
+      await updateStatus(id,paidState);
+    } catch (error) {
+      console.log(error);
+    }finally{
+      redirect("/dashboard/invoices");
+    }
+  };
   const handleSendReminder = () => {
     toast.promise(
       fetch(`/api/email/${id}`, {
@@ -74,18 +86,16 @@ export function InvoiceActions({ id }: invoiceActionsProps) {
           <Mail className="size-4 mr-2" />
           Reminder Email
         </DropdownMenuItem>
-
         <DropdownMenuItem onClick={() => setShowDeleteConfirmation(true)}>
           <Trash2 className="size-4 mr-2" />
           Delete Invoice
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
-          <Link href="">
+        <DropdownMenuItem onClick={()=>{handleStateChange()}}>
             <CheckCircle className="size-4 mr-2" />
-            Mark as paid
-          </Link>
+            Mark as {paidState.toLowerCase()}
         </DropdownMenuItem>
+
       </DropdownMenuContent>
       <DelInvoiceDialog
         invoiceid={id}
@@ -122,7 +132,6 @@ function DelInvoiceDialog({
       redirect("/dashboard/invoices")
     });
   }
-  <Toaster richColors  />
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>

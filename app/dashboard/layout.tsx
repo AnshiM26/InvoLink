@@ -25,7 +25,6 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import ThemeToggle from "@/components/ThemeToggle";
-import { ThemeProvider } from "next-themes";
 
 async function getUser(userId: string) {
   const data = await prisma.user.findUnique({
