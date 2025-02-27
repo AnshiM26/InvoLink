@@ -154,3 +154,38 @@ export async function editInvoice(prevState: any, formData: FormData) {
     });
   return redirect("/dashboard/invoices");
 }
+
+
+export default async function DeleteInvoice(invoiceid: string) {
+  try {
+    const session = await requireUser();
+
+    if (!session?.user?.id) {
+      return { error: "Unauthorized" }; 
+    }
+
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id: invoiceid,
+        userId: session.user.id,
+      },
+    });
+
+    if (!invoice) {
+      return { error: "Invoice not found" }; 
+    }
+
+    // Delete invoice
+    await prisma.invoice.delete({
+      where: {
+        id: invoiceid,
+        userId: session.user.id, 
+      },
+    });
+
+    return { success: true }; 
+  } catch (error) {
+    console.error("DeleteInvoice Error:", error);
+    return { error: "Something went wrong" };
+  }
+}

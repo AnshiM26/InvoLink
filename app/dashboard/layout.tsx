@@ -3,7 +3,12 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import logo from "@/public/logo.png";
 import { DashboardLinks } from "@/components/DashboardLinks";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, User2 } from "lucide-react";
 import {
@@ -19,27 +24,33 @@ import requireUser from "../utils/hooks";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { Toaster } from "@/components/ui/sonner";
+import ThemeToggle from "@/components/ThemeToggle";
+import { ThemeProvider } from "next-themes";
 
-async function getUser(userId:string){
-  const data=await prisma.user.findUnique({
-    where:{
-      id:userId
+async function getUser(userId: string) {
+  const data = await prisma.user.findUnique({
+    where: {
+      id: userId,
     },
-    select:{
-      firstName:true,
-      lastName:true,
-      address:true,
-    }
+    select: {
+      firstName: true,
+      lastName: true,
+      address: true,
+    },
   });
 
-  if(!data?.firstName || !data.lastName || !data.address){
+  if (!data?.firstName || !data.lastName || !data.address) {
     redirect("/onboarding");
   }
 }
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const session=await requireUser();
-  const data=await getUser(session.user?.id as string);
+export default async function DashboardLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const session = await requireUser();
+  const data = await getUser(session.user?.id as string);
   return (
     <>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -69,13 +80,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-              <SheetTitle>Menu</SheetTitle> 
+                <SheetTitle>Menu</SheetTitle>
                 <nav className="grid gap-2 mt-10">
                   <DashboardLinks />
                 </nav>
               </SheetContent>
             </Sheet>
-            <div className="flex items-center ml-auto">
+            <div className="flex items-center ml-auto gap-5">
+              <div>
+              <ThemeToggle />
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -87,27 +101,26 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>
-                        My Account
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                        <Link href="/dashboard">Dashboard</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/dashboard/invoices">Invoices</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                        <form 
-                             action={async ()=>{
-                             "use server"
-                             await signOut();
-                             }} 
-                        className="w-full">
-                            <button className="w-full text-left">Logout</button>
-                        </form>
-                    </DropdownMenuItem>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/invoices">Invoices</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <form
+                      action={async () => {
+                        "use server";
+                        await signOut();
+                      }}
+                      className="w-full"
+                    >
+                      <button className="w-full text-left">Logout</button>
+                    </form>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -117,7 +130,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           </main>
         </div>
       </div>
-      <Toaster richColors closeButton/>
+      <Toaster richColors closeButton />
     </>
   );
 }
