@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { jsPDF } from "jspdf";
 import { formatCurrency } from "@/app/utils/hooks";
+import getDueDate from "@/components/DueDate";
 export async function GET(
   request: Request,
   {
@@ -69,7 +70,7 @@ export async function GET(
     120,
     45
   );
-  pdf.text(`Due Date: Net ${data.dueDate}`, 120, 50);
+  pdf.text(`Due Date: ${getDueDate(data.date, data.dueDate)}`, 120, 50);
 
   //Tables
   pdf.setFontSize(10);

@@ -5,6 +5,7 @@ import { invoiceSchema, onboardingSchema } from "./utils/zodSchemas";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import sgMail from "@sendgrid/mail";
+import getDueDate from "@/components/DueDate";
 
 export async function onboardUser(prevState: any, formData: FormData) {
   const session = await requireUser();
@@ -62,6 +63,7 @@ export async function createInvoice(prevState: any, formData: FormData) {
     },
   });
 
+
   sgMail.setApiKey(process.env.SENDGRID_INVOICE_EMAIL_API_KEY!);
   const msg = {
     to: submission.value.clientEmail,
@@ -70,9 +72,7 @@ export async function createInvoice(prevState: any, formData: FormData) {
     dynamicTemplateData: {
       clientName: submission.value.clientName,
       invoiceNumber: submission.value.invoiceNumber,
-      dueDate: new Intl.DateTimeFormat("en-IN", {
-        dateStyle: "long",
-      }).format(new Date(submission.value.date)),
+      dueDate: getDueDate(submission.value.date, submission.value.dueDate),
       totalAmt: formatCurrency(
         submission.value.total,
         submission.value.currency
