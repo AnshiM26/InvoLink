@@ -65,7 +65,9 @@ export async function DashboardBlocks() {
         </CardHeader>
         <CardContent>
           <h2 className="text-2xl font-bold">+{data.length}</h2>
-          <p className="text-xs text-muted-foreground">Total invoices issued in the past 30 days</p>
+          <p className="text-xs text-muted-foreground">
+            Total invoices issued in the past 30 days
+          </p>
         </CardContent>
       </Card>
       <Card>
@@ -82,13 +84,15 @@ export async function DashboardBlocks() {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Open invoices</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Pending invoices
+          </CardTitle>
           <Activity className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <h2 className="text-2xl font-bold">+{openInvoices.length}</h2>
           <p className="text-xs text-muted-foreground">
-            Invoices that are pending
+            Invoices that are currently pending
           </p>
         </CardContent>
       </Card>

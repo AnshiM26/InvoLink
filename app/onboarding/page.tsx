@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { SubmitButton } from "@/components/SubmitButtons";
 import {
   Card,
@@ -29,6 +29,9 @@ export default function Onboarding() {
   });
   return (
     <div className="min-h-screen w-screen flex items-center justify-center">
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div>
+      </div>
       <Card className="max-w-sm mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">You are almost finished!</CardTitle>
@@ -53,25 +56,29 @@ export default function Onboarding() {
                   defaultValue={fields.firstName.initialValue}
                   placeholder="John"
                 />
-                <p className="text-red-500 text-sm">{fields.firstName.errors}</p>
+                <p className="text-red-500 text-sm">
+                  {fields.firstName.errors}
+                </p>
               </div>
               <div className="flex flex-col gap-2">
                 <Label>Last Name</Label>
-                <Input 
-                name={fields.lastName.name}
-                key={fields.lastName.key}
-                defaultValue={fields.lastName.initialValue}
-                placeholder="Doe" />
+                <Input
+                  name={fields.lastName.name}
+                  key={fields.lastName.key}
+                  defaultValue={fields.lastName.initialValue}
+                  placeholder="Doe"
+                />
                 <p className="text-red-500 text-sm">{fields.lastName.errors}</p>
               </div>
             </div>
             <div className="grid gap-2">
               <Label>Address</Label>
-              <Input 
-              name={fields.address.name}
-              key={fields.address.key}
-              defaultValue={fields.address.initialValue}
-              placeholder="123 Main Street" />
+              <Input
+                name={fields.address.name}
+                key={fields.address.key}
+                defaultValue={fields.address.initialValue}
+                placeholder="123 Main Street"
+              />
             </div>
             <SubmitButton text="Finish Onboarding" />
           </form>
