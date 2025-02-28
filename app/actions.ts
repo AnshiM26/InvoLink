@@ -64,7 +64,6 @@ export async function createInvoice(prevState: any, formData: FormData) {
     },
   });
 
-
   sgMail.setApiKey(process.env.SENDGRID_INVOICE_EMAIL_API_KEY!);
   const msg = {
     to: submission.value.clientEmail,
@@ -78,7 +77,10 @@ export async function createInvoice(prevState: any, formData: FormData) {
         submission.value.total,
         submission.value.currency
       ),
-      invoiceLink: `http://localhost:3000/api/invoice/${data.id}`,
+      invoiceLink:
+        process.env.NODE_ENV !== "production"
+          ? `http://localhost:3000/api/invoice/${data.id}`
+          : `https://invo-link.vercel.app/api/invoice/${data.id}`,
     },
   };
 
@@ -141,7 +143,10 @@ export async function editInvoice(prevState: any, formData: FormData) {
         submission.value.total,
         submission.value.currency
       ),
-      invoiceLink: `http://localhost:3000/api/invoice/${data.id}`,
+      invoiceLink:
+        process.env.NODE_ENV !== "production"
+          ? `http://localhost:3000/api/invoice/${data.id}`
+          : `https://invo-link.vercel.app/api/invoice/${data.id}`,
     },
   };
 
@@ -156,13 +161,12 @@ export async function editInvoice(prevState: any, formData: FormData) {
   return redirect("/dashboard/invoices");
 }
 
-
 export default async function DeleteInvoice(invoiceid: string) {
   try {
     const session = await requireUser();
 
     if (!session?.user?.id) {
-      return { error: "Unauthorized" }; 
+      return { error: "Unauthorized" };
     }
 
     const invoice = await prisma.invoice.findUnique({
@@ -173,18 +177,18 @@ export default async function DeleteInvoice(invoiceid: string) {
     });
 
     if (!invoice) {
-      return { error: "Invoice not found" }; 
+      return { error: "Invoice not found" };
     }
 
     // Delete invoice
     await prisma.invoice.delete({
       where: {
         id: invoiceid,
-        userId: session.user.id, 
+        userId: session.user.id,
       },
     });
 
-    return { success: true }; 
+    return { success: true };
   } catch (error) {
     console.error("DeleteInvoice Error:", error);
     return { error: "Something went wrong" };
@@ -192,14 +196,14 @@ export default async function DeleteInvoice(invoiceid: string) {
 }
 
 export async function updateStatus(invoiceid: string, status: string) {
-  const session=await requireUser();
-  const data=await prisma.invoice.update({
-    where:{
-      userId:session.user?.id,
-      id:invoiceid
+  const session = await requireUser();
+  const data = await prisma.invoice.update({
+    where: {
+      userId: session.user?.id,
+      id: invoiceid,
     },
-    data:{
-      status:status as InvoiceStatus
-    }
-  })
+    data: {
+      status: status as InvoiceStatus,
+    },
+  });
 }
