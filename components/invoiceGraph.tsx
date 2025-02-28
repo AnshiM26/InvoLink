@@ -64,7 +64,8 @@ export async function InvoiceGraph() {
       <CardHeader>
         <CardTitle>Paid Invoices</CardTitle>
         <CardDescription>
-          Invoices that have been paid in the last 30 days.
+          Invoices that have been paid in the last 30 days. 
+          <p>Note: Graph shows information for payments that have been PAID in the PAST 30 days ONLY.</p>
         </CardDescription>
       </CardHeader>
       <CardContent>

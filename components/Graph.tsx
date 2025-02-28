@@ -1,14 +1,20 @@
-"use client"
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+"use client";
 
-interface GraphProps{
-    data:{
-        date:string;
-        amount:number;
-    }[]
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+
+interface iAppProps {
+  data: {
+    date: string;
+    amount: number;
+  }[];
 }
-export function Graph({data}:GraphProps) {
+
+export function Graph({ data }: iAppProps) {
   return (
     <ChartContainer
       config={{
