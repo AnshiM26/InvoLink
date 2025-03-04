@@ -26,10 +26,10 @@ InvoLink is a powerful and secure invoice management platform designed to stream
 
 # Screenshots
 User registration -- Authentication using Auth.js magic links and sendgrid  
-<p align="center">
-  <img src="assets/loginpage.png" width="45%" />
-  <img src="assets/onboarding.png" width="45%" />
-</p><br>
+Login
+<img src="assets/loginpage.png" />
+Onboarding route
+<img src="assets/onboarding.png" />
 Dashboard  
 <img src="assets/ExampleDashbaord.png" />
 Invoice Page
@@ -50,10 +50,9 @@ Update email
 Reminder email
 <img src="assets/Reminder Email.png" />
 Empty states for new users
-<p align="center">
-  <img src="assets/Empty state 1.png" width="45%" />
-  <img src="assets/Empty state 2.png" width="45%" />
-</p><br>
+<img src="assets/Empty state 1.png" />
+<img src="assets/Empty state 2.png" />
+
 
 # Tech stack
 InvoLink is a full-stack application built with modern technologies:
